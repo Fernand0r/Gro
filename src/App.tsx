@@ -1,15 +1,15 @@
-import { ConnectKitButton } from 'connectkit'
+import { ConnectKitButton }       from 'connectkit'
 import { useAccount } from 'wagmi'
-
-import { Account } from './components'
+import { Account }                from './components'
+import { Container }              from '@mui/material'
 
 export function App() {
   const { isConnected } = useAccount()
   return (
-    <>
-      <h1>wagmi + ConnectKit + Vite</h1>
+    <Container>
+      <h1>Gro</h1>
       <ConnectKitButton />
-      {isConnected && <Account />}
-    </>
+      { isConnected && <Account /> }
+    </Container>
   )
 }
