@@ -1,8 +1,6 @@
 import { useAccount, useBalance, useContractRead, useEnsName, useProvider } from 'wagmi'
 import { Card, CardContent, CardHeader }                                    from '@mui/material'
 import { formatEther, formatUnits }                                         from "ethers/lib/utils"
-import { useState }                                                         from "react"
-import Uni_Abi                                                              from "../abi/Uniswap.json"
 
 export function Account() {
   const { address } = useAccount()
@@ -10,11 +8,9 @@ export function Account() {
   const { data } = useBalance({
     address
   })
-  const { data: uniswap_balance } = useContractRead({
-    address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-    abi: Uni_Abi,
-    functionName: 'balanceOf',
-    args: [address]
+  const { data: uniswap_balance } = useBalance({
+    address,
+    token: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
   })
 
   return (
@@ -29,8 +25,8 @@ export function Account() {
       }} />
       <CardContent>
         <p>Address: {address}</p>
-        <p>ETH Balance: {data && data.formatted} ETH</p>
-        <p>Uniswap Balance: { formatEther(uniswap_balance) } Uni</p>
+        <p>ETH Balance: {data?.formatted} ETH</p>
+        <p>Uniswap Balance: {uniswap_balance?.formatted} Uni</p>
       </CardContent>
     </Card>
   )
