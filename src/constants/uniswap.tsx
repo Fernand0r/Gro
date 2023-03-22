@@ -16,3 +16,4 @@ export enum TokenAddress {
 
 export const QuoterV2ContractAddress = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e'
 export const SwapRouter02ContractAddress = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
+export const amountRegExp = /^\d+\.?\d*$/

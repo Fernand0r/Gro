@@ -2,7 +2,7 @@ import { useAccount, useContract, useContractWrite, usePrepareContractWrite, use
 import {
   formatEther,
   parseEther,
-  parseUnits
+  hexlify
 }                                                                                                     from "ethers/lib/utils"
 import { useEffect, useState }                                                                        from 'react'
 import {
@@ -11,21 +11,22 @@ import {
   CardContent,
   CardHeader,
   Stack,
-  styled,
   TextField
 }                                                                                                     from "@mui/material"
 import { useDebounce }                                                                                from 'usehooks-ts'
 import {
-  erc20ABI,
   quoterV2ABI,
+  useErc20Approve,
+  usePrepareErc20Approve,
   usePrepareSwapRouter02ExactInputSingle,
   useSwapRouter02ExactInputSingle
 }                                                                                                     from "../generated"
 import {
+  amountRegExp,
   FeeAmount,
   QuoterV2ContractAddress, SwapRouter02ContractAddress,
   TokenAddress
-} from "../constants/uniswap"
+}                                                                                                     from "../constants/uniswap"
 import { ContractTransaction }                                                                        from "ethers"
 
 export const SwapTokens = () => {
@@ -36,6 +37,8 @@ export const SwapTokens = () => {
   const debounceFrom = useDebounce(from, 500)
   const debounceTo = useDebounce(to, 500)
   const [direction, setDirection] = useState<'column' | 'column-reverse'>('column')
+  const [amountIn, setAmountIn] = useState('0')
+  const [amountOut, setAmountOut] = useState('0')
 
   // Get a quote without gas fees
   const uni_contract = useContract({
@@ -54,13 +57,11 @@ export const SwapTokens = () => {
     })
   }
 
-  const { config: approveConfig } = usePrepareContractWrite({
+  const { config: approveConfig } = usePrepareErc20Approve({
     address: direction === 'column' ? TokenAddress.WETH : TokenAddress.UNI,
-    abi: erc20ABI,
-    functionName: 'approve',
     args: [SwapRouter02ContractAddress, parseEther('0.1')]
   })
-  const { write: approve } = useContractWrite(approveConfig)
+  const { write: approve } = useErc20Approve({ ...approveConfig })
 
   useEffect(() => {
     const isWeth2Uni = direction === 'column'
@@ -73,31 +74,35 @@ export const SwapTokens = () => {
         } else {
           setFrom(formatEther(code?.amountOut))
         }
+        setAmountOut(formatEther(code?.amountOut))
       })
     }
+
+    setAmountIn(direction === 'column' ? debounceFrom : debounceTo)
+    console.log('amountIn:', amountIn)
+    console.log('amountOut:', amountOut)
   }, [debounceFrom, debounceTo, direction])
 
   quote(true, '1')?.then((code: any) => {
     setExchangeRate(formatEther(code?.amountOut))
   })
 
+  // @ts-ignore
   const { config, error } = usePrepareSwapRouter02ExactInputSingle({
     args: [{
       tokenIn: direction === 'column' ? TokenAddress.WETH : TokenAddress.UNI,
       tokenOut: direction === 'column' ? TokenAddress.UNI : TokenAddress.WETH,
       fee: FeeAmount.MEDIUM,
       recipient: address!,
-      // amountIn: parseUnits(direction === 'column' ? debounceFrom : debounceTo),
-      amountIn: parseUnits('0.02'),
-      amountOutMinimum: parseUnits('0.1'),
-      // amountOutMinimum: parseUnits(String(Number(direction === 'column' ? debounceTo : debounceFrom)*0.95)),
+      amountIn: parseEther(amountIn),
+      amountOutMinimum: parseEther(amountOut),
       sqrtPriceLimitX96: parseEther('0')
+    }, {
+      gasLimit: hexlify(1000000),
+      value: parseEther(amountIn)
     }]
   })
   const { isSuccess, isLoading, write } = useSwapRouter02ExactInputSingle(config)
-  const StyledTextField = styled(TextField)`
-    background-color: white;
-  `
 
   return (
     <Card elevation={3} sx={{
@@ -111,32 +116,41 @@ export const SwapTokens = () => {
       }} />
       <CardContent>
         <Stack direction={direction} alignItems="stretch" justifyContent="center" spacing={2}>
-          <StyledTextField placeholder="token amount"
-                           value={from}
-                           onChange={(e) => {
-                             console.log('from:', parseUnits(e.target.value, 18))
-                             setFrom(e.target.value)
-                           }
-                           }
-                           InputProps={{
-                             endAdornment: 'ETH'
-                           }}
+          <TextField placeholder="token amount"
+                     value={from}
+                     sx={{ backgroundColor: 'white' }}
+                     onChange={(e) => {
+                       const value = e.target.value
+                       if (amountRegExp.test(value)) {
+                         setFrom(e.target.value)
+                       } else {
+                         setFrom('0')
+                       }
+                     }}
+                     InputProps={{
+                       endAdornment: 'ETH'
+                     }}
           />
           <p style={{ textAlign: "center", cursor: 'pointer' }}
              onClick={() => setDirection(direction === 'column' ? 'column-reverse' : 'column')}>↓</p>
-          <StyledTextField placeholder="token amount"
-                           value={to}
-                           onChange={(e) =>
-                             setTo(e.target.value)
-                           }
-                           InputProps={{
-                             endAdornment: 'Uni'
-                           }}
+          <TextField placeholder="token amount"
+                     value={to}
+                     sx={{ backgroundColor: 'white' }}
+                     onChange={(e) => {
+                       const value = e.target.value
+                       if (amountRegExp.test(value)) {
+                         setTo(e.target.value)
+                       } else {
+                         setTo('0')
+                       }
+                     }}
+                     InputProps={{
+                       endAdornment: 'Uni'
+                     }}
           />
         </Stack>
         <p>ExchangeRate: 1 ETH = {exchangeRate} Uni</p>
         <Button sx={{ bgcolor: '#4caf50', color: 'white', width: '100%' }} onClick={() => {
-          // approve?.()
           write?.()
         }}>
           {isLoading ? 'Loading...' : isSuccess ? 'Success' : 'Send'}

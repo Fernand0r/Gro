@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import { useState }                                                from 'react'
 import {
   usePrepareSendTransaction, useProvider,
   useSendTransaction,
   useWaitForTransaction
-}                                  from 'wagmi'
-import { formatUnits, parseEther } from "ethers/lib/utils"
-import {styled}                    from "@mui/material"
+}                                                                  from 'wagmi'
+import { formatUnits, parseEther }                                 from "ethers/lib/utils"
 import { Card, CardHeader, CardContent, TextField, Button, Stack } from "@mui/material"
 
 export function SendTransaction() {
@@ -27,9 +26,6 @@ export function SendTransaction() {
     console.log(formatUnits(code, 'gwei'))
     setGasPrice((formatUnits(code, 'gwei')))
   })
-  const StyledTextField = styled(TextField)`
-    background-color: white;
-  `
 
   return (
     <Card elevation={3} sx={{
@@ -45,9 +41,9 @@ export function SendTransaction() {
         <p>Gas Price: {gasPrice}gwei</p>
 
         <Stack direction="column" justifyContent="center" spacing={2}>
-          <StyledTextField placeholder="recipient" value={to}
+          <TextField placeholder="recipient" value={to} sx={{ backgroundColor: 'white' }}
                      onChange={(e) => setTo(e.target.value)} />
-          <StyledTextField placeholder="amount" value={amount}
+          <TextField placeholder="amount" value={amount} sx={{ backgroundColor: 'white' }}
                      onChange={(e) => setAmount(e.target.value)} />
           <Button sx={{ bgcolor: '#4caf50', color: 'white' }} onClick={() => sendTransaction?.()}>
             {isLoading ? 'Loading...' : isSuccess ? 'Success' : 'Send'}
