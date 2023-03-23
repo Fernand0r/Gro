@@ -1,10 +1,18 @@
-import { useAccount, useContract, useContractWrite, usePrepareContractWrite, useProvider, useSigner } from 'wagmi'
+import {
+  useAccount,
+  useContract,
+  useContractWrite,
+  usePrepareContractWrite,
+  useProvider,
+  useSigner,
+  useWaitForTransaction
+}                              from 'wagmi'
 import {
   formatEther,
   parseEther,
   hexlify
-}                                                                                                     from "ethers/lib/utils"
-import { useEffect, useState }                                                                        from 'react'
+}                              from "ethers/lib/utils"
+import { useEffect, useState } from 'react'
 import {
   Button,
   Card,
@@ -12,22 +20,22 @@ import {
   CardHeader,
   Stack,
   TextField
-}                                                                                                     from "@mui/material"
-import { useDebounce }                                                                                from 'usehooks-ts'
+}                                       from "@mui/material"
+import { useDebounce, useLocalStorage } from 'usehooks-ts'
 import {
   quoterV2ABI,
   useErc20Approve,
   usePrepareErc20Approve,
   usePrepareSwapRouter02ExactInputSingle,
   useSwapRouter02ExactInputSingle
-}                                                                                                     from "../generated"
+}                                       from "../generated"
 import {
   amountRegExp,
   FeeAmount,
   QuoterV2ContractAddress, SwapRouter02ContractAddress,
   TokenAddress
-}                                                                                                     from "../constants/uniswap"
-import { ContractTransaction }                                                                        from "ethers"
+}                              from "../constants/uniswap"
+import { ContractTransaction } from "ethers"
 
 export const SwapTokens = () => {
   const { address } = useAccount()
@@ -39,6 +47,7 @@ export const SwapTokens = () => {
   const [direction, setDirection] = useState<'column' | 'column-reverse'>('column')
   const [amountIn, setAmountIn] = useState('0')
   const [amountOut, setAmountOut] = useState('0')
+  const [transactionsHash, setTransactionsHash] = useLocalStorage('transactionsHash', '[]')
 
   // Get a quote without gas fees
   const uni_contract = useContract({
@@ -102,7 +111,13 @@ export const SwapTokens = () => {
       value: parseEther(amountIn)
     }]
   })
-  const { isSuccess, isLoading, write } = useSwapRouter02ExactInputSingle(config)
+  const { isSuccess, isLoading, isError, write, data: swapResponse } = useSwapRouter02ExactInputSingle(config)
+
+  useEffect(() => {
+    if (isSuccess || isError) {
+      setTransactionsHash(JSON.stringify([swapResponse?.hash, ...JSON.parse(transactionsHash)]))
+    }
+  }, [isSuccess, isError])
 
   return (
     <Card elevation={3} sx={{
@@ -151,6 +166,7 @@ export const SwapTokens = () => {
         </Stack>
         <p>ExchangeRate: 1 ETH = {exchangeRate} Uni</p>
         <Button sx={{ bgcolor: '#4caf50', color: 'white', width: '100%' }} onClick={() => {
+          approve?.()
           write?.()
         }}>
           {isLoading ? 'Loading...' : isSuccess ? 'Success' : 'Send'}
