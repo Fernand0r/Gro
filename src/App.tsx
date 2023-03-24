@@ -6,6 +6,7 @@ import { CssBaseline }      from "@mui/material"
 import { SendTransaction }  from "./components/SendTransaction"
 import { SwapTokens }       from "./components/SwapTokens"
 import Header               from "./components/Header"
+import ReactJson                                from 'react-json-view'
 
 export function App() {
   const { isConnected } = useAccount()

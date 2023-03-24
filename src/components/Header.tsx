@@ -53,9 +53,7 @@ export default function Header() {
         <ConnectKitButton />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row-reverse', flexShrink: 0 }}>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Notification />
-        </Box>
+        <Notification />
       </Box>
     </Sheet>
   )
