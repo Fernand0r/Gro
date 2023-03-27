@@ -4,7 +4,6 @@ import Box                                      from '@mui/joy/Box'
 import Badge                                    from "@mui/joy/Badge"
 import Modal                                    from "@mui/joy/Modal"
 import ModalDialog                              from "@mui/joy/ModalDialog"
-import { css }                                  from "@emotion/react"
 import { useReadLocalStorage, useUpdateEffect } from "usehooks-ts"
 import { useEffect, useRef, useState }          from "react"
 import { parseJSON }                            from "../utils/common.util"
@@ -40,12 +39,12 @@ export const Notification = () => {
   }, [hashes])
 
   return (
-    <Box ref={notificationRef} sx={{
+    <Box ref={ notificationRef } sx={{
       position: 'relative',
       overflow: 'visible!important'
     }}>
-      <Badge badgeContent={hashes.length} variant="solid" color="danger">
-        <IconButton variant="soft" sx={{ borderRadius: 'xl' }} onClick={() => setOpen(!open)}>
+      <Badge badgeContent={ hashes.length } variant="solid" color="danger">
+        <IconButton variant="soft" sx={{ borderRadius: 'xl' }} onClick={ () => setOpen(!open) }>
           <NotificationsIcon />
         </IconButton>
       </Badge>
