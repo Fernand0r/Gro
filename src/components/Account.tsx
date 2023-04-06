@@ -1,6 +1,7 @@
 import { useAccount, useBalance, useContractRead, useEnsName, useProvider } from 'wagmi'
 import { Card, CardContent, CardHeader }                                    from '@mui/material'
 import { formatEther, formatUnits }                                         from "ethers/lib/utils"
+import { TokenAddressesMapping }                                            from "../types/tokenAddresses"
 
 export function Account() {
   const { address } = useAccount()
@@ -10,7 +11,7 @@ export function Account() {
   })
   const { data: uniswap_balance } = useBalance({
     address,
-    token: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+    token: TokenAddressesMapping.UniSwap
   })
 
   return (

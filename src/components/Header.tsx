@@ -1,15 +1,38 @@
-import * as React           from 'react'
-import { ColorPaletteProp } from '@mui/joy/styles'
-import Badge                from '@mui/joy/Badge'
-import Box                  from '@mui/joy/Box'
-import IconButton           from '@mui/joy/IconButton'
-import Sheet                from '@mui/joy/Sheet'
-import NotificationsIcon    from '@mui/icons-material/Notifications'
-import { ConnectKitButton } from "connectkit"
-import { Notification }     from "./Notification"
+import * as React                   from 'react'
+import { ColorPaletteProp, styled } from '@mui/joy/styles'
+import Box                          from '@mui/joy/Box'
+import IconButton                   from '@mui/joy/IconButton'
+import Sheet                        from '@mui/joy/Sheet'
+import { ConnectKitButton }         from "connectkit"
+import { Notification }             from "./Notification"
+import { useAccount }               from "wagmi"
+import { walletAvatarsMapping }     from "../constants/walletAvatars"
 
 export default function Header() {
   const [color, setColor] = React.useState<ColorPaletteProp>('primary')
+  const { connector } = useAccount()
+
+  const StyledButton = styled('button')`
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    padding: 10px 16px;
+    color: #333;
+    background: #f2f2f2;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 10rem;
+    border: none;
+    transition: 200ms ease;
+
+    &:hover {
+      transform: filter(brightness(1.1));
+      box-shadow: 0 6px 40px -6px #1a88f8;
+    }
+  `;
+
   return (
     <Sheet
       variant="solid"
@@ -50,7 +73,16 @@ export default function Header() {
         <img alt="" src="https://wcp.57blocks.com/57_favicon.ico" />
       </IconButton>
       <Box sx={{ flex: 1, display: 'flex', gap: 1, px: 2 }}>
-        <ConnectKitButton />
+        <ConnectKitButton.Custom>
+          {({ isConnected, show, truncatedAddress, ensName }) => {
+            return (
+              <StyledButton onClick={show}>
+                {connector && <img width="22" src={walletAvatarsMapping[connector!.name]} alt="" />}
+                {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
+              </StyledButton>
+            );
+          }}
+        </ConnectKitButton.Custom>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row-reverse', flexShrink: 0 }}>
         <Notification />

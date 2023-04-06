@@ -1,50 +1,35 @@
-import { IconButton }                           from "@mui/joy"
-import NotificationsIcon                        from "@mui/icons-material/Notifications"
-import Box                                      from '@mui/joy/Box'
-import Badge                                    from "@mui/joy/Badge"
-import Modal                                    from "@mui/joy/Modal"
-import ModalDialog                              from "@mui/joy/ModalDialog"
-import { useReadLocalStorage, useUpdateEffect } from "usehooks-ts"
-import { useEffect, useRef, useState }          from "react"
-import { parseJSON }                            from "../utils/common.util"
-import { useProvider }                          from "wagmi"
-import ReactJson                                from 'react-json-view'
+import { IconButton, List }            from "@mui/joy"
+import NotificationsIcon               from "@mui/icons-material/Notifications"
+import Box                             from '@mui/joy/Box'
+import Badge                           from "@mui/joy/Badge"
+import Modal                           from "@mui/joy/Modal"
+import ModalDialog                     from "@mui/joy/ModalDialog"
+import { useReadLocalStorage }         from "usehooks-ts"
+import { useEffect, useRef, useState } from "react"
+import { parseJSON }                   from "../utils/common.util"
+import { Message }                     from "./Message"
 
 export const Notification = () => {
   const notificationRef = useRef(null)
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Record<string, any>[]>([])
   const [hashes, setHashes] = useState<`0x${string}`[]>([])
   const transactionsHash = useReadLocalStorage<string>('transactionsHash')
-  const provider = useProvider()
 
   useEffect(() => {
     console.log('transcactionsHash:', transactionsHash)
     setHashes(parseJSON(transactionsHash) ?? [])
   }, [transactionsHash])
 
-  useUpdateEffect(() => {
-    if (hashes.length > 0 && messages.length === 0) {
-      hashes.forEach(hash => {
-        provider.getTransactionReceipt(hash).then((res) => {
-          console.log('data:', res)
-          setMessages([...messages, { data: res, isSuccess: true }])
-        }).catch((err) => {
-          console.log('err:', err)
-          setMessages([...messages, { data: err, isError: true }])
-        })
-      })
-      console.log('messages:', messages)
-    }
-  }, [hashes])
-
   return (
-    <Box ref={ notificationRef } sx={{
+    <Box ref={notificationRef} sx={{
       position: 'relative',
       overflow: 'visible!important'
     }}>
-      <Badge badgeContent={ hashes.length } variant="solid" color="danger">
-        <IconButton variant="soft" sx={{ borderRadius: 'xl' }} onClick={ () => setOpen(!open) }>
+      <Badge badgeContent={hashes.length} variant="solid" color="danger">
+        <IconButton variant="soft" sx={{ borderRadius: 'xl' }} onClick={() => {
+          if (hashes.length === 0) return
+          setOpen(!open)
+        }}>
           <NotificationsIcon />
         </IconButton>
       </Badge>
@@ -66,25 +51,25 @@ export const Notification = () => {
         <ModalDialog
           variant="plain"
           sx={{
+            height: "600px",
             maxHeight: "fit-content",
-            bgcolor: 'white'
+            bgcolor: 'white',
+            overflow: 'auto'
           }}
         >
-          {
-            messages.map((message, index) => {
-              return (
-                <Box key={index} sx={{
-                  width: '600px',
-                  height: '600px',
-                  overflow: 'auto',
+          <List>
+            {
+              hashes.map((hash) => {
+                return (<Box key={hash} sx={{
+                  width: "600px",
                   bgcolor: 'white',
                   position: 'relative'
                 }}>
-                  <ReactJson src={message.data} />
-                </Box>
-              )
-            })
-          }
+                  <Message key={hash} hash={hash} />
+                </Box>)
+              })
+            }
+          </List>
         </ModalDialog>
       </Modal>
     </Box>

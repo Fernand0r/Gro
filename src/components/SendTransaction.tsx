@@ -38,7 +38,7 @@ export function SendTransaction() {
         textAlign: 'center'
       }} />
       <CardContent>
-        <p>Gas Price: {gasPrice}gwei</p>
+        <p>Gas Price: { gasPrice }gwei</p>
 
         <Stack direction="column" justifyContent="center" spacing={2}>
           <TextField placeholder="recipient" value={to} sx={{ backgroundColor: 'white' }}

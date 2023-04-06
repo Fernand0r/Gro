@@ -1,18 +1,14 @@
 import {
   useAccount,
   useContract,
-  useContractWrite,
-  usePrepareContractWrite,
   useProvider,
-  useSigner,
-  useWaitForTransaction
-}                              from 'wagmi'
+}                                       from 'wagmi'
 import {
   formatEther,
   parseEther,
   hexlify
-}                              from "ethers/lib/utils"
-import { useEffect, useState } from 'react'
+}                                       from "ethers/lib/utils"
+import { useEffect, useState }          from 'react'
 import {
   Button,
   Card,
@@ -21,14 +17,14 @@ import {
   Stack,
   TextField
 }                                       from "@mui/material"
-import { useDebounce, useLocalStorage } from 'usehooks-ts'
+import { useDebounce } from 'usehooks-ts'
 import {
   quoterV2ABI,
   useErc20Approve,
   usePrepareErc20Approve,
   usePrepareSwapRouter02ExactInputSingle,
   useSwapRouter02ExactInputSingle
-}                                       from "../generated"
+}                              from "../generated"
 import {
   amountRegExp,
   FeeAmount,
@@ -47,7 +43,6 @@ export const SwapTokens = () => {
   const [direction, setDirection] = useState<'column' | 'column-reverse'>('column')
   const [amountIn, setAmountIn] = useState('0')
   const [amountOut, setAmountOut] = useState('0')
-  const [transactionsHash, setTransactionsHash] = useLocalStorage('transactionsHash', '[]')
 
   // Get a quote without gas fees
   const uni_contract = useContract({
@@ -96,7 +91,6 @@ export const SwapTokens = () => {
     setExchangeRate(formatEther(code?.amountOut))
   })
 
-  // @ts-ignore
   const { config, error } = usePrepareSwapRouter02ExactInputSingle({
     args: [{
       tokenIn: direction === 'column' ? TokenAddress.WETH : TokenAddress.UNI,
@@ -112,12 +106,6 @@ export const SwapTokens = () => {
     }]
   })
   const { isSuccess, isLoading, isError, write, data: swapResponse } = useSwapRouter02ExactInputSingle(config)
-
-  useEffect(() => {
-    if (isSuccess || isError) {
-      setTransactionsHash(JSON.stringify([swapResponse?.hash, ...JSON.parse(transactionsHash)]))
-    }
-  }, [isSuccess, isError])
 
   return (
     <Card elevation={3} sx={{
@@ -137,7 +125,7 @@ export const SwapTokens = () => {
                      onChange={(e) => {
                        const value = e.target.value
                        if (amountRegExp.test(value)) {
-                         setFrom(e.target.value)
+                         setFrom(value)
                        } else {
                          setFrom('0')
                        }
@@ -154,17 +142,18 @@ export const SwapTokens = () => {
                      onChange={(e) => {
                        const value = e.target.value
                        if (amountRegExp.test(value)) {
-                         setTo(e.target.value)
+                         setTo(value)
                        } else {
                          setTo('0')
                        }
                      }}
                      InputProps={{
-                       endAdornment: 'Uni'
+                       endAdornment: 'UNI'
                      }}
           />
         </Stack>
-        <p>ExchangeRate: 1 ETH = {exchangeRate} Uni</p>
+        <p>ExchangeRate:
+           1 {direction === 'column' ? 'ETH' : 'UNI'} = {direction === 'column' ? exchangeRate : (1 / Number(exchangeRate))} {direction === 'column' ? 'UNI' : 'ETH'}</p>
         <Button sx={{ bgcolor: '#4caf50', color: 'white', width: '100%' }} onClick={() => {
           approve?.()
           write?.()

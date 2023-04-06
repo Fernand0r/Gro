@@ -12,12 +12,12 @@ import {
   UseContractEventConfig,
   useNetwork,
   Address,
-} from 'wagmi'
+}                      from 'wagmi'
 import {
   ReadContractResult,
   WriteContractMode,
   PrepareWriteContractResult,
-} from 'wagmi/actions'
+}                      from 'wagmi/actions'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // erc20
