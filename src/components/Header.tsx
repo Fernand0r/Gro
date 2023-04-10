@@ -19,8 +19,8 @@ export default function Header() {
     align-items: center;
     column-gap: 8px;
     padding: 10px 16px;
-    color: white;
-    background: limegreen;
+    color: #3d3c3c;
+    background: #e7e4e7;
     font-size: 16px;
     font-weight: 500;
     border-radius: 10rem;
