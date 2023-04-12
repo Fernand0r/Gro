@@ -2,33 +2,30 @@ import { useAccount } from "wagmi"
 import {
   useBatchHandlerCancelInvest,
   useBatchHandlerGetUserInvestTimes,
-  usePrepareBatchHandlerCancelInvest,
-} from "../generatedABIsForFantomTestnet"
-import { BigNumber } from "ethers"
+  usePrepareBatchHandlerCancelInvest
+}                     from "../generatedABIsForFantomTestnet"
+import { BigNumber }  from "ethers"
 
 export const useCancelBatchHandlerInvest = () => {
   const { address } = useAccount()
   const { data: investTimes, isSuccess: isGetUserInvestTimesSuccess } =
     useBatchHandlerGetUserInvestTimes({ args: [address!] })
-  const isReady = isGetUserInvestTimesSuccess && investTimes?.gt(0)
+  const enabled = isGetUserInvestTimesSuccess && investTimes?.gt(0)
 
-  if (!isReady) return {}
-
-  const { config: cancelDepositConfig, data: cancel_prefetch } =
+  const { config: cancelDepositConfig } =
     usePrepareBatchHandlerCancelInvest({
       args: [BigNumber.from(investTimes!.toNumber() - 1)],
+      enabled
     })
   const {
     write: cancelInvest,
     isError,
-    isSuccess,
+    isSuccess
   } = useBatchHandlerCancelInvest(cancelDepositConfig)
-
-  console.log("cancel_prefetch:", cancel_prefetch)
 
   return {
     cancelInvest,
     isError,
-    isSuccess,
+    isSuccess
   }
 }

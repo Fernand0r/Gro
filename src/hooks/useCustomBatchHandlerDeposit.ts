@@ -1,30 +1,18 @@
 import {
   useBatchHandlerDeposit,
-  useErc20Approve,
-  usePrepareBatchHandlerDeposit,
-  usePrepareErc20Approve,
-} from "../generatedABIsForFantomTestnet"
-import { TokenAddressesMapping } from "../types/tokenAddresses"
-import { parseEther } from "ethers/lib/utils"
-import { useEffect, useState } from "react"
+  usePrepareBatchHandlerDeposit
+}                    from "../generatedABIsForFantomTestnet"
+import { BigNumber } from "ethers"
 
 export const useCustomBatchHandlerDeposit = (
   amount: string
 ): ReturnType<typeof useBatchHandlerDeposit> => {
-  // const defaultResult = {
-  //   data: undefined,
-  //   isLoading: false,
-  //   isSuccess: false,
-  //   isError: false,
-  //   write: () => {},
-  // }
-  // const [hookState, setHookState] =
-  //   useState<ReturnType<typeof useBatchHandlerDeposit>>()
-  // if (!amount || Number(amount) <= 0) return
-
+  const amountNumber = Number(amount)
+  const enabled = amountNumber > 0
   const { config: depositConfig, isSuccess: isPreparedDeposit } =
     usePrepareBatchHandlerDeposit({
-      args: [parseEther(Number(amount) > 0 ? amount : '0')],
+      enabled,
+      args: [BigNumber.from(amountNumber)]
     })
 
   return useBatchHandlerDeposit(depositConfig)

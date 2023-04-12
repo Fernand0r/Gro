@@ -1,7 +1,6 @@
-import { useAccount, useBalance, useContractRead, useEnsName, useProvider } from 'wagmi'
-import { Card, CardContent, CardHeader }                                    from '@mui/material'
-import { formatEther, formatUnits }                                         from "ethers/lib/utils"
-import { TokenAddressesMapping }                                            from "../types/tokenAddresses"
+import { useAccount, useBalance, useEnsName } from 'wagmi'
+import { Card, CardContent, CardHeader }      from '@mui/material'
+import { TokenAddressesMapping }              from "@/types/tokenAddresses"
 
 export function Account() {
   const { address } = useAccount()

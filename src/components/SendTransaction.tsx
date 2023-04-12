@@ -1,11 +1,12 @@
 import { useState }                                                from 'react'
 import {
-  usePrepareSendTransaction, useProvider,
+  usePrepareSendTransaction,
   useSendTransaction,
   useWaitForTransaction
 }                                                                  from 'wagmi'
-import { formatUnits, parseEther }                                 from "ethers/lib/utils"
+import { parseEther }                                              from "ethers/lib/utils"
 import { Card, CardHeader, CardContent, TextField, Button, Stack } from "@mui/material"
+import { useGasPrice }                                             from "@/hooks/useGasPrice"
 
 export function SendTransaction() {
   const [to, setTo] = useState('')
@@ -13,19 +14,16 @@ export function SendTransaction() {
   const { config } = usePrepareSendTransaction({
     request: {
       to,
-      value: amount ? parseEther(amount) : undefined
-    }
+      value: parseEther(Number(amount) > 0 ? amount : '0')
+    },
+    enabled: !!to && !!amount
   })
-  const { data, sendTransaction } = useSendTransaction(config)
+  const { data, sendTransaction, isSuccess: isSent } = useSendTransaction(config)
   const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash
+    hash: data?.hash,
+    enabled: isSent
   })
-  const [gasPrice, setGasPrice] = useState('0')
-  const provider = useProvider()
-  provider.getGasPrice().then((code) => {
-    console.log(formatUnits(code, 'gwei'))
-    setGasPrice((formatUnits(code, 'gwei')))
-  })
+  const gasPrice = useGasPrice('gwei')
 
   return (
     <Card elevation={3} sx={{
@@ -38,8 +36,7 @@ export function SendTransaction() {
         textAlign: 'center'
       }} />
       <CardContent>
-        <p>Gas Price: { gasPrice }gwei</p>
-
+        <p>Gas Price: {gasPrice}gwei</p>
         <Stack direction="column" justifyContent="center" spacing={2}>
           <TextField placeholder="recipient" value={to} sx={{ backgroundColor: 'white' }}
                      onChange={(e) => setTo(e.target.value)} />
