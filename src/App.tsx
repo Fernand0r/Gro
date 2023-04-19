@@ -1,5 +1,5 @@
 import { goerli, useAccount, useNetwork } from "wagmi"
-import { Account }                        from "@/components"
+import { Account }                        from "@/components/Account"
 import { Box, Container }                 from "@mui/material"
 import { CssBaseline }                    from "@mui/material"
 import { SendTransaction }                from "@/components/SendTransaction"

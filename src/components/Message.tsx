@@ -19,7 +19,7 @@ export const Message = ({ hash }: { hash: `0x${string}` }) => {
       </ListItemDecorator>
       <ListItemContent>
         <ReactJson name={isSuccess ? 'success' : isError ? 'failed' : isLoading ? 'processing' : ''} collapsed
-                   enableClipboard={false} key={hash} src={ isLoading ? { hash } : transaction_receipt } />
+                   enableClipboard={false} key={hash} src={ isLoading ? { hash } : transaction_receipt as object } />
       </ListItemContent>
     </ListItem>
   )
