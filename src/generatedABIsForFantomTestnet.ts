@@ -618,7 +618,7 @@ export const batchHandlerConfig = {
 /**
  * Wraps __{@link useContract}__ with `abi` set to __{@link erc20ABI}__.
  */
-export function useErc20(config: Omit<UseContractConfig, 'abi'> = {} as any) {
+export function useErc20(config: Omit<UseContractConfig, 'abi'> = {} as any): ReturnType<typeof useContract> {
   return useContract({ abi: erc20ABI, ...config })
 }
 
@@ -633,7 +633,7 @@ export function useErc20Read<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
     'abi'
   > = {} as any,
-) {
+): ReturnType<typeof useContractRead> {
   return useContractRead({ abi: erc20ABI, ...config } as UseContractReadConfig<
     typeof erc20ABI,
     TFunctionName,
@@ -651,7 +651,7 @@ export function useErc20Allowance<
     UseContractReadConfig<typeof erc20ABI, 'allowance', TSelectData>,
     'abi' | 'functionName'
   > = {} as any,
-) {
+): ReturnType<typeof useContractRead> {
   return useContractRead({
     abi: erc20ABI,
     functionName: 'allowance',
@@ -786,7 +786,7 @@ export function useErc20Approve<TMode extends WriteContractMode>(
         abi?: never
         functionName?: 'approve'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof erc20ABI, 'approve'>({
     abi: erc20ABI,
     functionName: 'approve',
@@ -808,7 +808,7 @@ export function useErc20Transfer<TMode extends WriteContractMode>(
         abi?: never
         functionName?: 'transfer'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof erc20ABI, 'transfer'>({
     abi: erc20ABI,
     functionName: 'transfer',
@@ -830,7 +830,7 @@ export function useErc20TransferFrom<TMode extends WriteContractMode>(
         abi?: never
         functionName?: 'transferFrom'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof erc20ABI, 'transferFrom'>({
     abi: erc20ABI,
     functionName: 'transferFrom',
@@ -957,7 +957,7 @@ export function useBatchHandler(
   config: Omit<UseContractConfig, 'abi' | 'address'> & {
     chainId?: keyof typeof batchHandlerAddress
   } = {} as any,
-) {
+): ReturnType<typeof useContract> {
   return useContract({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1531,7 +1531,7 @@ export function useBatchHandlerAddWhiteList<
         chainId?: TChainId
         functionName?: 'addWhiteList'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'addWhiteList'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1568,7 +1568,7 @@ export function useBatchHandlerCancelInvest<
         chainId?: TChainId
         functionName?: 'cancelInvest'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'cancelInvest'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1605,7 +1605,7 @@ export function useBatchHandlerCanelWithdraw<
         chainId?: TChainId
         functionName?: 'canelWithdraw'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'canelWithdraw'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1635,7 +1635,7 @@ export function useBatchHandlerClaimCoin<
         chainId?: TChainId
         functionName?: 'claimCoin'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'claimCoin'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1665,7 +1665,7 @@ export function useBatchHandlerClaimShare<
         chainId?: TChainId
         functionName?: 'claimShare'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'claimShare'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1706,7 +1706,7 @@ export function useBatchHandlerCreateNewBatch<
         chainId?: TChainId
         functionName?: 'createNewBatch'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'createNewBatch'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1736,7 +1736,7 @@ export function useBatchHandlerDeposit<
         chainId?: TChainId
         functionName?: 'deposit'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'deposit'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1777,7 +1777,7 @@ export function useBatchHandlerRemoveWhiteList<
         chainId?: TChainId
         functionName?: 'removeWhiteList'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'removeWhiteList'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1818,7 +1818,7 @@ export function useBatchHandlerRenounceOwnership<
         chainId?: TChainId
         functionName?: 'renounceOwnership'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'renounceOwnership'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1859,7 +1859,7 @@ export function useBatchHandlerTransferOwnership<
         chainId?: TChainId
         functionName?: 'transferOwnership'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'transferOwnership'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],
@@ -1900,7 +1900,7 @@ export function useBatchHandlerUpdateBatchDuration<
         chainId?: TChainId
         functionName?: 'updateBatchDuration'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'updateBatchDuration'>(
     {
       abi: batchHandlerABI,
@@ -1932,7 +1932,7 @@ export function useBatchHandlerWithdraw<
         chainId?: TChainId
         functionName?: 'withdraw'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof batchHandlerABI, 'withdraw'>({
     abi: batchHandlerABI,
     address: batchHandlerAddress[4002],

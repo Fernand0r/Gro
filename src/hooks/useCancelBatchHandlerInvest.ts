@@ -14,7 +14,7 @@ export const useCancelBatchHandlerInvest = () => {
 
   const { config: cancelDepositConfig } =
     usePrepareBatchHandlerCancelInvest({
-      args: [BigNumber.from(investTimes!.toNumber() - 1)],
+      args: [BigNumber.from(investTimes ? investTimes.toNumber() - 1 : 0)],
       enabled
     })
   const {

@@ -814,7 +814,7 @@ export const swapRouter02Config = {
 /**
  * Wraps __{@link useContract}__ with `abi` set to __{@link erc20ABI}__.
  */
-export function useErc20(config: Omit<UseContractConfig, 'abi'> = {} as any) {
+export function useErc20(config: Omit<UseContractConfig, 'abi'> = {} as any): ReturnType<typeof useContract> {
   return useContract({ abi: erc20ABI, ...config })
 }
 
@@ -982,7 +982,7 @@ export function useErc20Approve<TMode extends WriteContractMode>(
         abi?: never
         functionName?: 'approve'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof erc20ABI, 'approve'>({
     abi: erc20ABI,
     functionName: 'approve',
@@ -1004,7 +1004,7 @@ export function useErc20Transfer<TMode extends WriteContractMode>(
         abi?: never
         functionName?: 'transfer'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof erc20ABI, 'transfer'>({
     abi: erc20ABI,
     functionName: 'transfer',
@@ -1026,7 +1026,7 @@ export function useErc20TransferFrom<TMode extends WriteContractMode>(
         abi?: never
         functionName?: 'transferFrom'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   return useContractWrite<TMode, typeof erc20ABI, 'transferFrom'>({
     abi: erc20ABI,
     functionName: 'transferFrom',
@@ -1154,7 +1154,7 @@ export function useQuoterV2(
   config: Omit<UseContractConfig, 'abi' | 'address'> & {
     chainId?: keyof typeof quoterV2Address
   } = {} as any,
-) {
+): ReturnType<typeof useContract> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContract({
@@ -1329,7 +1329,7 @@ export function useQuoterV2QuoteExactInput<
         chainId?: TChainId
         functionName?: 'quoteExactInput'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof quoterV2ABI, 'quoteExactInput'>({
@@ -1373,7 +1373,7 @@ export function useQuoterV2QuoteExactInputSingle<
         chainId?: TChainId
         functionName?: 'quoteExactInputSingle'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof quoterV2ABI, 'quoteExactInputSingle'>({
@@ -1413,7 +1413,7 @@ export function useQuoterV2QuoteExactOutput<
         chainId?: TChainId
         functionName?: 'quoteExactOutput'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof quoterV2ABI, 'quoteExactOutput'>({
@@ -1457,7 +1457,7 @@ export function useQuoterV2QuoteExactOutputSingle<
         chainId?: TChainId
         functionName?: 'quoteExactOutputSingle'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof quoterV2ABI, 'quoteExactOutputSingle'>({
@@ -1593,7 +1593,7 @@ export function useSwapRouter02(
   config: Omit<UseContractConfig, 'abi' | 'address'> & {
     chainId?: keyof typeof swapRouter02Address
   } = {} as any,
-) {
+): ReturnType<typeof useContract> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContract({
@@ -1824,7 +1824,7 @@ export function useSwapRouter02ApproveMax<
         chainId?: TChainId
         functionName?: 'approveMax'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'approveMax'>({
@@ -1868,7 +1868,7 @@ export function useSwapRouter02ApproveMaxMinusOne<
         chainId?: TChainId
         functionName?: 'approveMaxMinusOne'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'approveMaxMinusOne'>({
@@ -1912,7 +1912,7 @@ export function useSwapRouter02ApproveZeroThenMax<
         chainId?: TChainId
         functionName?: 'approveZeroThenMax'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'approveZeroThenMax'>({
@@ -1956,7 +1956,7 @@ export function useSwapRouter02ApproveZeroThenMaxMinusOne<
         chainId?: TChainId
         functionName?: 'approveZeroThenMaxMinusOne'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<
@@ -2004,7 +2004,7 @@ export function useSwapRouter02CallPositionManager<
         chainId?: TChainId
         functionName?: 'callPositionManager'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'callPositionManager'>(
@@ -2039,7 +2039,7 @@ export function useSwapRouter02ExactInput<
         chainId?: TChainId
         functionName?: 'exactInput'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'exactInput'>({
@@ -2083,7 +2083,7 @@ export function useSwapRouter02ExactInputSingle<
         chainId?: TChainId
         functionName?: 'exactInputSingle'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'exactInputSingle'>({
@@ -2123,7 +2123,7 @@ export function useSwapRouter02ExactOutput<
         chainId?: TChainId
         functionName?: 'exactOutput'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'exactOutput'>({
@@ -2167,7 +2167,7 @@ export function useSwapRouter02ExactOutputSingle<
         chainId?: TChainId
         functionName?: 'exactOutputSingle'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'exactOutputSingle'>({
@@ -2211,7 +2211,7 @@ export function useSwapRouter02GetApprovalType<
         chainId?: TChainId
         functionName?: 'getApprovalType'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'getApprovalType'>({
@@ -2255,7 +2255,7 @@ export function useSwapRouter02IncreaseLiquidity<
         chainId?: TChainId
         functionName?: 'increaseLiquidity'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'increaseLiquidity'>({
@@ -2288,7 +2288,7 @@ export function useSwapRouter02Mint<
         chainId?: TChainId
         functionName?: 'mint'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'mint'>({
@@ -2321,7 +2321,7 @@ export function useSwapRouter02Multicall<
         chainId?: TChainId
         functionName?: 'multicall'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'multicall'>({
@@ -2354,7 +2354,7 @@ export function useSwapRouter02Pull<
         chainId?: TChainId
         functionName?: 'pull'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'pull'>({
@@ -2387,7 +2387,7 @@ export function useSwapRouter02RefundEth<
         chainId?: TChainId
         functionName?: 'refundETH'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'refundETH'>({
@@ -2420,7 +2420,7 @@ export function useSwapRouter02SelfPermit<
         chainId?: TChainId
         functionName?: 'selfPermit'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'selfPermit'>({
@@ -2464,7 +2464,7 @@ export function useSwapRouter02SelfPermitAllowed<
         chainId?: TChainId
         functionName?: 'selfPermitAllowed'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'selfPermitAllowed'>({
@@ -2508,7 +2508,7 @@ export function useSwapRouter02SelfPermitAllowedIfNecessary<
         chainId?: TChainId
         functionName?: 'selfPermitAllowedIfNecessary'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<
@@ -2556,7 +2556,7 @@ export function useSwapRouter02SelfPermitIfNecessary<
         chainId?: TChainId
         functionName?: 'selfPermitIfNecessary'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<
@@ -2604,7 +2604,7 @@ export function useSwapRouter02SwapExactTokensForTokens<
         chainId?: TChainId
         functionName?: 'swapExactTokensForTokens'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<
@@ -2652,7 +2652,7 @@ export function useSwapRouter02SwapTokensForExactTokens<
         chainId?: TChainId
         functionName?: 'swapTokensForExactTokens'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<
@@ -2689,7 +2689,7 @@ export function useSwapRouter02SweepToken<
         chainId?: TChainId
         functionName?: 'sweepToken'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'sweepToken'>({
@@ -2733,7 +2733,7 @@ export function useSwapRouter02SweepTokenWithFee<
         chainId?: TChainId
         functionName?: 'sweepTokenWithFee'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'sweepTokenWithFee'>({
@@ -2777,7 +2777,7 @@ export function useSwapRouter02UniswapV3SwapCallback<
         chainId?: TChainId
         functionName?: 'uniswapV3SwapCallback'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<
@@ -2821,7 +2821,7 @@ export function useSwapRouter02UnwrapWeth9<
         chainId?: TChainId
         functionName?: 'unwrapWETH9'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'unwrapWETH9'>({
@@ -2865,7 +2865,7 @@ export function useSwapRouter02UnwrapWeth9WithFee<
         chainId?: TChainId
         functionName?: 'unwrapWETH9WithFee'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'unwrapWETH9WithFee'>({
@@ -2898,7 +2898,7 @@ export function useSwapRouter02WrapEth<
         chainId?: TChainId
         functionName?: 'wrapETH'
       } = {} as any,
-) {
+): ReturnType<typeof useContractWrite> {
   const { chain } = useNetwork()
   const chainId = config.chainId ?? chain?.id
   return useContractWrite<TMode, typeof swapRouter02ABI, 'wrapETH'>({

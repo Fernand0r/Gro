@@ -1,8 +1,18 @@
 {
   "name": "gro",
-  "version": "0.0.1",
+  "version": "0.0.6",
+  "license": "MIT",
   "private": true,
-  "module": "src/index.tsx",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/test-component.es.js",
+      "require": "./dist/test-component.umd.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -20,15 +30,17 @@
     "connectkit": "^1.1.1",
     "ethers": "^5.7.2",
     "process": "^0.11.10",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "react-json-view": "^1.21.3",
     "usehooks-ts": "^2.9.1",
     "util": "^0.12.4",
     "wagmi": "~0.11.0"
   },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.21.4",
+    "@babel/plugin-syntax-jsx": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
     "@emotion/babel-plugin": "^11.10.6",
     "@emotion/babel-preset-css-prop": "^11.10.0",
